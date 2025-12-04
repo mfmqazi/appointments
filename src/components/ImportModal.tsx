@@ -78,7 +78,7 @@ export default function ImportModal({ isOpen, onClose, onImport }: ImportModalPr
                             source: 'manual',
                             description: row['Description'],
                             location: row['Location']
-                        };
+                        } as CalendarEvent;
                     }).filter((e): e is CalendarEvent => e !== null);
                     resolve(events);
                 },
