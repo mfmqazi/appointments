@@ -1,0 +1,105 @@
+{
+  "users": [
+    {
+      "id": "cmir0cq6n0000a2pp6x6zyn2n",
+      "email": "mfmqazi@gmail.com",
+      "password": "$2b$10$I59oZr43quiuH5S3XjyWeu9e5wKeCZEB89fNUimWSvuzv7c4I/NdW",
+      "name": "Musaddique",
+      "createdAt": "2025-12-04T05:41:12.718Z",
+      "updatedAt": "2025-12-04T05:41:12.718Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "cmij051my00004d55189fiohk",
+      "title": "Office Visit with Nikhil Iyengar, MD",
+      "start": "2025-12-24T17:10:00.000Z",
+      "end": "2025-12-24T17:40:00.000Z",
+      "description": "Appointment Time: 10:20 AM MST\nPhone: 480-882-7450",
+      "location": "10200 N 92nd St, Ste 150, Scottsdale AZ 85258-4535",
+      "type": "doctor",
+      "person": "Musaddique",
+      "source": "manual",
+      "createdAt": "2025-11-28T15:13:04.906Z",
+      "updatedAt": "2025-11-28T15:19:35.264Z"
+    },
+    {
+      "id": "cmij0fw2t0000ndl2gxkf0c3l",
+      "title": "Established Patient with Prineet Tung, MD for Fatima",
+      "start": "2026-03-30T22:15:00.000Z",
+      "end": "2026-03-30T23:00:00.000Z",
+      "description": "Appointment Time: 3:30 PM MST\nPhone: 623-580-5800",
+      "location": "7831 W Deer Valley Rd, Peoria AZ 85382-2140",
+      "type": "doctor",
+      "person": "Fatima",
+      "source": "manual",
+      "createdAt": "2025-11-28T15:21:30.917Z",
+      "updatedAt": "2025-11-28T15:27:30.116Z"
+    },
+    {
+      "id": "cmij0fw2v0001ndl2rftzkdlv",
+      "title": "Office Visit with Nikhil Iyengar, MD for Fatima",
+      "start": "2025-12-24T16:50:00.000Z",
+      "end": "2025-12-24T17:20:00.000Z",
+      "description": "Appointment Time: 10:00 AM MST\nPhone: 480-882-7450",
+      "location": "10200 N 92nd St, Ste 150, Scottsdale AZ 85258-4535",
+      "type": "doctor",
+      "person": "Fatima",
+      "source": "manual",
+      "createdAt": "2025-11-28T15:21:30.918Z",
+      "updatedAt": "2025-11-28T15:22:02.135Z"
+    },
+    {
+      "id": "cmij0fw2z0002ndl23l7hyzsa",
+      "title": "Annual Wellness with Narendra Godbole, MD",
+      "start": "2026-05-27T21:45:00.000Z",
+      "end": "2026-05-27T22:30:00.000Z",
+      "description": "Appointment Time: 3:00 PM MST\nPhone: 623-580-5800\n\n\nArrive 15 minutes prior to appointment.\n\nIf morning appointment, please fast 12 hours prior--may have water.\n\nPlease bring in a list of medications or bring all medications so the \nstaff can get an accurate list for the provider.\n\nIf you have an advance directive, and not already done so, please bring it \nin with you and we will scan it into your chart.",
+      "location": "7831 W Deer Valley Rd, Peoria AZ 85382-2140",
+      "type": "doctor",
+      "person": "Musaddique",
+      "source": "manual",
+      "createdAt": "2025-11-28T15:21:30.919Z",
+      "updatedAt": "2025-11-28T15:27:49.050Z"
+    },
+    {
+      "id": "cmij119b10000jjnvmchslb4w",
+      "title": "Massage",
+      "start": "2026-01-07T16:00:00.000Z",
+      "end": "2026-01-07T18:00:00.000Z",
+      "description": null,
+      "location": "Gateway Community College",
+      "type": "massage",
+      "person": "Musaddique",
+      "source": "manual",
+      "createdAt": "2025-11-28T15:38:07.837Z",
+      "updatedAt": "2025-11-28T15:38:07.837Z"
+    },
+    {
+      "id": "cmij19ol40001jjnvhy8zrjab",
+      "title": "Massage",
+      "start": "2026-01-07T15:30:00.000Z",
+      "end": "2026-01-07T17:30:00.000Z",
+      "description": null,
+      "location": null,
+      "type": "massage",
+      "person": "Fatima",
+      "source": "manual",
+      "createdAt": "2025-11-28T15:44:40.888Z",
+      "updatedAt": "2025-11-28T15:45:06.875Z"
+    },
+    {
+      "id": "cmij1cfsa0002jjnv2grs0krv",
+      "title": "Massage (2 x 2 hours)",
+      "start": "2025-12-16T18:30:00.000Z",
+      "end": "2025-12-16T22:30:00.000Z",
+      "description": null,
+      "location": null,
+      "type": "massage",
+      "person": "Fatima",
+      "source": "manual",
+      "createdAt": "2025-11-28T15:46:49.450Z",
+      "updatedAt": "2025-11-28T21:37:22.603Z"
+    }
+  ]
+}

@@ -49,3 +49,6 @@ next-env.d.ts
 # Google Calendar Credentials
 token.json
 credentials.json
+
+.vercel
+.env*.local
