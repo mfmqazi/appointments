@@ -54,7 +54,7 @@ export default function ImportModal({ isOpen, onClose, onImport }: ImportModalPr
             Papa.parse(file, {
                 header: true,
                 complete: (results) => {
-                    const events: CalendarEvent[] = results.data.map((row: any) => {
+                    const events = results.data.map((row: any) => {
                         // Basic mapping - assumes standard headers like Subject, Start Date, etc.
                         // Adjust based on Outlook CSV export format
                         const title = row['Subject'] || row['Title'] || 'Untitled Event';
