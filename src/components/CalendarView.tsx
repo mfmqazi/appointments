@@ -6,7 +6,7 @@ import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { CalendarEvent, Person } from '@/lib/types';
-import { Plus, Stethoscope, Sparkles, Calendar as CalendarIcon, Upload, List, LogOut } from 'lucide-react';
+import { Plus, Stethoscope, Sparkles, Calendar as CalendarIcon, Upload, List, LogOut, Lock } from 'lucide-react';
 import { useSession, signOut } from "next-auth/react";
 import { clsx } from 'clsx';
 import ImportModal from './ImportModal';
@@ -14,6 +14,7 @@ import UpcomingEvents from './UpcomingEvents';
 import EventDetailsModal from './EventDetailsModal';
 import CreateEventModal from './CreateEventModal';
 import EditEventModal from './EditEventModal';
+import { ChangePasswordModal } from './ChangePasswordModal';
 
 const locales = {
     'en-US': enUS,
@@ -44,6 +45,7 @@ export default function CalendarView({ initialEvents }: CalendarViewProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [eventToEdit, setEventToEdit] = useState<CalendarEvent | null>(null);
     const [showMobileList, setShowMobileList] = useState(false);
+    const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
     const fetchEvents = useCallback(async () => {
         try {
@@ -254,6 +256,14 @@ export default function CalendarView({ initialEvents }: CalendarViewProps) {
                         </span>
                     )}
                     <button
+                        onClick={() => setIsChangePasswordOpen(true)}
+                        className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors shadow-sm"
+                        title="Change Password"
+                    >
+                        <Lock className="w-4 h-4" />
+                        <span className="hidden sm:inline">Password</span>
+                    </button>
+                    <button
                         onClick={() => signOut()}
                         className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors shadow-md"
                     >
@@ -308,6 +318,11 @@ export default function CalendarView({ initialEvents }: CalendarViewProps) {
                     setEventToEdit(null);
                 }}
                 onSave={handleUpdateEvent}
+            />
+
+            <ChangePasswordModal
+                isOpen={isChangePasswordOpen}
+                onClose={() => setIsChangePasswordOpen(false)}
             />
 
             <EventDetailsModal
