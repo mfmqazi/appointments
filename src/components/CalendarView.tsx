@@ -2,11 +2,8 @@
 
 import React, { useState, useCallback } from 'react';
 import { Calendar, dateFnsLocalizer, View, Views } from 'react-big-calendar';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import enUS from 'date-fns/locale/en-US';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { CalendarEvent, Person } from '@/lib/types';
 import { Plus, Stethoscope, Sparkles, Calendar as CalendarIcon, Upload, List, LogOut } from 'lucide-react';
