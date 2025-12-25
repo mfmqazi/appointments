@@ -13,7 +13,7 @@ export async function GET(request: Request) {
         const { tokens } = await oauth2Client.getToken(code);
         oauth2Client.setCredentials(tokens);
         saveToken(tokens);
-        return NextResponse.redirect('http://localhost:3000');
+        return NextResponse.redirect(new URL('/', request.url));
     } catch (error) {
         console.error('Error retrieving access token', error);
         return NextResponse.json({ error: 'Failed to retrieve access token' }, { status: 500 });
