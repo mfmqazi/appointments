@@ -1,5 +1,5 @@
 export type EventType = 'doctor' | 'massage' | 'other';
-export type Person = 'Musaddique' | 'Fatima';
+export type Person = 'Musaddique' | 'Fatima' | 'Mahjabeen';
 
 export interface CalendarEvent {
     id: string;

@@ -10,9 +10,10 @@ interface CreateEventModalProps {
     onSave: (event: Omit<CalendarEvent, 'id' | 'createdAt' | 'updatedAt'>) => void;
     initialStart?: Date;
     initialEnd?: Date;
+    initialData?: Partial<Omit<CalendarEvent, 'id' | 'createdAt' | 'updatedAt'>>;
 }
 
-export default function CreateEventModal({ isOpen, onClose, onSave, initialStart, initialEnd }: CreateEventModalProps) {
+export default function CreateEventModal({ isOpen, onClose, onSave, initialStart, initialEnd, initialData }: CreateEventModalProps) {
     const [title, setTitle] = useState('');
     const [start, setStart] = useState(initialStart || new Date());
     const [end, setEnd] = useState(initialEnd || new Date(new Date().getTime() + 60 * 60 * 1000));
@@ -28,6 +29,24 @@ export default function CreateEventModal({ isOpen, onClose, onSave, initialStart
             setEnd(initialEnd || new Date(initialStart.getTime() + 60 * 60 * 1000));
         }
     }, [initialStart, initialEnd]);
+
+    React.useEffect(() => {
+        if (initialData) {
+            if (initialData.title) setTitle(initialData.title);
+            if (initialData.description) setDescription(initialData.description);
+            if (initialData.location) setLocation(initialData.location);
+            if (initialData.type) setType(initialData.type);
+            if (initialData.person) setPerson(initialData.person);
+            if (initialData.start) {
+                setStart(initialData.start);
+                // Ensure end is set too if start is provided
+                setEnd(initialData.end || new Date(initialData.start.getTime() + 60 * 60 * 1000));
+            } else if (initialData.end) {
+                // If only end provided (unlikely), set end
+                setEnd(initialData.end);
+            }
+        }
+    }, [initialData]);
 
     // Helper function to safely format date for datetime-local input
     const formatDateTimeLocal = (date: Date): string => {
@@ -97,7 +116,7 @@ export default function CreateEventModal({ isOpen, onClose, onSave, initialStart
             location: location.trim() || undefined,
             type,
             person,
-            source: 'manual'
+            source: initialData?.source || 'manual'
         });
 
         // Reset form

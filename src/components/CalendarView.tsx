@@ -47,6 +47,11 @@ export default function CalendarView({ initialEvents }: CalendarViewProps) {
     const [showMobileList, setShowMobileList] = useState(false);
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
+    // Drag and Drop state
+    const [isDragOver, setIsDragOver] = useState(false);
+    const [isLoadingEvent, setIsLoadingEvent] = useState(false);
+    const [droppedEventData, setDroppedEventData] = useState<Partial<Omit<CalendarEvent, 'id' | 'createdAt' | 'updatedAt'>> | null>(null);
+
     const fetchEvents = useCallback(async () => {
         try {
             const res = await fetch('/api/events');
@@ -167,6 +172,119 @@ export default function CalendarView({ initialEvents }: CalendarViewProps) {
         }
     };
 
+    const extractEventIdFromUrl = (url: string): string | null => {
+        try {
+            const urlObj = new URL(url);
+            const eid = urlObj.searchParams.get('eid');
+            if (eid) {
+                const base64 = eid.replace(/-/g, '+').replace(/_/g, '/');
+                const pad = base64.length % 4;
+                const padded = pad ? base64 + '='.repeat(4 - pad) : base64;
+                const decoded = atob(padded);
+                return decoded.split(' ')[0];
+            }
+            if (url.includes('/eventedit/')) {
+                const parts = url.split('/eventedit/');
+                if (parts[1]) {
+                    const hashPart = parts[1].split('/')[0];
+                    const base64 = hashPart.replace(/-/g, '+').replace(/_/g, '/');
+                    const pad = base64.length % 4;
+                    const padded = pad ? base64 + '='.repeat(4 - pad) : base64;
+                    const decoded = atob(padded);
+                    return decoded.split(' ')[0];
+                }
+            }
+        } catch (e) {
+            // Ignore invalid URLs
+        }
+        return null;
+    };
+
+    const handleDragOver = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragOver(true);
+    }, []);
+
+    const handleDragLeave = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragOver(false);
+    }, []);
+
+    const processEventData = async (text: string) => {
+        let eventId = extractEventIdFromUrl(text);
+
+        if (eventId) {
+            setIsLoadingEvent(true);
+            try {
+                const res = await fetch(`/api/calendar/event?eventId=${eventId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setDroppedEventData({
+                        ...data,
+                        start: new Date(data.start),
+                        end: new Date(data.end)
+                    });
+                    setIsCreateModalOpen(true);
+                } else {
+                    alert('Found Event ID but failed to fetch details. Ensure you are authenticated with Google.');
+                }
+            } catch (error) {
+                console.error("Error fetching event", error);
+                alert('Error fetching event details');
+            } finally {
+                setIsLoadingEvent(false);
+            }
+        } else if (text && text.trim().length > 0 && !text.startsWith('http')) {
+            // Simple text drop - use as title
+            setDroppedEventData({
+                title: text,
+                start: new Date(),
+                // Default to 1 hour duration
+                end: new Date(new Date().getTime() + 60 * 60 * 1000)
+            });
+            setIsCreateModalOpen(true);
+        } else {
+            // It was a URL but not a recognized Google Calendar event URL
+            // Or empty text
+            console.log('Unrecognized drop data:', text);
+        }
+    };
+
+    const handleDrop = useCallback(async (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragOver(false);
+
+        const text = e.dataTransfer.getData('text/plain');
+        const uriList = e.dataTransfer.getData('text/uri-list');
+
+        // Prioritize URI, then Text
+        const dataToProcess = uriList || text;
+
+        if (dataToProcess) {
+            await processEventData(dataToProcess);
+        }
+    }, []);
+
+    // Global Paste Handler
+    React.useEffect(() => {
+        const handlePaste = (e: ClipboardEvent) => {
+            // Only handle if no modal is open (simple check: if create modal is not open)
+            // But we actually WANT to open the modal.
+            // Check if user is typing in an input
+            if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') {
+                return;
+            }
+
+            const text = e.clipboardData?.getData('text');
+            if (text) {
+                processEventData(text);
+            }
+        };
+
+        window.addEventListener('paste', handlePaste);
+        return () => window.removeEventListener('paste', handlePaste);
+    }, []);
+
 
     const handleSelectEvent = useCallback(
         (event: CalendarEvent) => {
@@ -211,7 +329,28 @@ export default function CalendarView({ initialEvents }: CalendarViewProps) {
     );
 
     return (
-        <div className="h-screen flex flex-col bg-gray-50">
+        <div
+            className="h-screen flex flex-col bg-gray-50 relative"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+        >
+            {isDragOver && (
+                <div className="absolute inset-0 bg-indigo-500 bg-opacity-20 z-50 flex items-center justify-center border-4 border-indigo-500 border-dashed m-4 rounded-xl pointer-events-none">
+                    <div className="bg-white p-6 rounded-xl shadow-xl border border-gray-100">
+                        <p className="text-xl font-bold text-indigo-700 text-center">Drop Google Event URL</p>
+                        <p className="text-sm text-gray-500 text-center mt-2">from your browser address bar</p>
+                    </div>
+                </div>
+            )}
+            {isLoadingEvent && (
+                <div className="absolute inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center pointer-events-none">
+                    <div className="bg-white p-4 rounded-lg shadow flex items-center gap-3">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
+                        <span className="font-medium">Loading Event...</span>
+                    </div>
+                </div>
+            )}
             {/* Header */}
             <header className="bg-white shadow-sm p-4 flex justify-between items-center z-10 relative">
                 <div className="flex items-center gap-2">
@@ -304,10 +443,12 @@ export default function CalendarView({ initialEvents }: CalendarViewProps) {
                 onClose={() => {
                     setIsCreateModalOpen(false);
                     setNewEventSlot(null);
+                    setDroppedEventData(null);
                 }}
                 onSave={handleSaveNewEvent}
-                initialStart={newEventSlot?.start}
-                initialEnd={newEventSlot?.end}
+                initialStart={newEventSlot?.start || droppedEventData?.start}
+                initialEnd={newEventSlot?.end || droppedEventData?.end}
+                initialData={droppedEventData}
             />
 
             <EditEventModal

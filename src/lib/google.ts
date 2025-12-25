@@ -9,7 +9,12 @@ const TOKEN_PATH = path.join(process.cwd(), 'token.json');
 // For this local playground, we'll try to read from a file or env.
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
-const REDIRECT_URI = 'http://localhost:3000/api/auth/callback/google';
+const REDIRECT_URI = (process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/api/auth/callback/google').trim();
+
+console.log('--- GOOGLE AUTH CONFIG ---');
+console.log('Client ID:', CLIENT_ID ? '...Set' : 'Missing');
+console.log('Redirect URI:', REDIRECT_URI);
+console.log('--------------------------');
 
 export const oauth2Client = new google.auth.OAuth2(
     CLIENT_ID,
